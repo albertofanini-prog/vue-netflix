@@ -19,7 +19,7 @@
             class="singleMovie"
             v-for="movie in movies"
             :key="movie.id"
-            :style="{backgroundImage:`url(https://image.tmdb.org/t/p/w342${movie.poster_path})`}"
+            :style="{backgroundImage: movie.poster_path ? `url(https://image.tmdb.org/t/p/w342${movie.poster_path})` : `urlImgDefault`}"
             >
                 <div class="movie_info">
                     <span id="title">
@@ -31,7 +31,9 @@
                     <span id="original_language">
                         <span> Lingua originale: </span><img class="flag" :src="'Flags/' + movie.original_language + '.svg'">
                     </span>
-                    
+                    <span id="original_overview">
+                        {{movie.overview}}
+                    </span>
                     <div id="average_vote">
                         Voto medio: 
                         <span 
@@ -48,7 +50,7 @@
             class="singleMovie"
             v-for="serie in series"
             :key="serie.id"
-            :style="{backgroundImage:`url(https://image.tmdb.org/t/p/w342${serie.backdrop_path})`}"
+            :style="{backgroundImage: serie.poster_path ? `url(https://image.tmdb.org/t/p/w342${serie.backdrop_path})` : `urlImgDefault`}"
             >
                 <div class="movie_info">
                     <span id="title">
@@ -83,6 +85,8 @@
 
 import axios from 'axios'
 
+import urlImgDefault from '../assets/cover_coming_soon.jpg'
+
 export default {
     name: 'BoolflixMain',
     data(){
@@ -92,6 +96,7 @@ export default {
             movies:[],
             series:[],
             baseUrl: 'https://api.themoviedb.org/3',
+            urlImgDefault: urlImgDefault
         }
     },
     methods: {
@@ -140,7 +145,7 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 90%;
+        width: 80%;
         .form_container{
             display: flex;
             align-items: center;
@@ -148,22 +153,34 @@ export default {
             padding: 20px 0px;
             max-height: 10%;
             input{
-                max-height: 35px;
+                height: 25px;
                 margin-right: 10px;
                 border-radius: 999px;
                 padding: 10px;
-                background-color: white;
                 width: 100%;
+                background-color: black;
+                border: 1px solid red;
+                color: white;
             }
             input:focus{
                 outline:none;
             }
             button{
-                height: 35px;
+                height: 25px;
                 padding: 5px 10px;
                 border-radius: 999px;
                 cursor: pointer;
-                background-color: gray;
+                background-color: black;
+                border: 1px solid red;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: 0.4s ease-in-out;
+            }
+            button:hover{
+                background-color: red;
+                color: black;
             }
         }
         .movies_container{
@@ -173,24 +190,27 @@ export default {
             // border: 1px solid blue;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
             padding-bottom: 5%;
             //border: 3px solid purple;
             .singleMovie{
                 // border: 1px solid red;
-                width: calc((100% / 4) - 30px);
-                height: 600px;
+                width: calc((100% / 3) - 20px);
+                height: 400px;
                 // padding: 15px;
                 background-color: #1b1e23;
-                // //border-radius: 25px;
+                border-radius: 25px;
                 display: flex;
                 gap: 5px;
-                border: 4px solid white;
+                // border: 4px solid white;
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: 100% 100%;
+                box-shadow: rgba(255, 255, 255, 0.35) 0px 5px 10px;
+                overflow: hidden;
+                transition: 0.5s ease-in-out;
                 .movie_info{
                     width: 100%;
                     height: 100%;
@@ -200,32 +220,38 @@ export default {
                     justify-content: center;
                     align-items: center;
                     visibility: hidden;
+                    transition: 0.5s ease-in-out;
                     #title{
                         font-size: 22px;
                         font-weight: 600;
-                        padding: 5px;
+                        // padding: 5px;
                     }
                     #original_title{
                         font-size: 18px;
-                        padding: 5px;
+                        // padding: 5px;
                     }
                     #original_language{
                         font-size: 14px;
-                        padding: 5px;
+                        // padding: 5px;
                         display: flex;
                         flex-direction: column;
-                        justify-content: center;
+                        justify-content: flex-start;
                         align-items: center;
                         span{
-                            padding: 5px;
+                            padding: 10px 0px;
                         }
                         img{
                             max-width: 30%;
                             max-height: 20%;
                         }
                     }
+                    #original_overview{
+                        text-align: center;
+                        font-size: 14px;
+                        padding: 0px 5px;
+                    }
                     #average_vote{
-                        height: 20%;
+                        // height: 20%;
                         .star{
                             color: gold;
                         }
@@ -236,49 +262,69 @@ export default {
                 background-color: black;
                 opacity: 0.8;
                 visibility: visible;
+                overflow: hidden;
             }
-            @media only screen and (max-width: 1400px) {
+            @media only screen and (max-width: 1200px) {
+                main{
+                    width: 90%;
+                }
+                    .singleMovie{
+                        width: calc((100% / 5) - 20px);
+                        height: 325px;
+                    }
+                #original_overview{
+                    text-align: center;
+                    font-size: 10px;
+                    padding: 0px 5px;
+                }
+            }
+            @media only screen and (max-width: 1062px) {
+                main{
+                    width: 90%;
+                }
+                .singleMovie{
+                    width: calc((100% / 5) - 20px);
+                    height: 300px;
+                }
+                #original_overview{
+                    text-align: center;
+                    font-size: 10px;
+                    padding: 0px 5px;
+                }
+            }
+            @media only screen and (max-width: 992px) {
+                main{
+                    width: 90%;
+                }
+                .singleMovie{
+                    width: calc((100% / 4) - 20px);
+                    height: 300px;
+                }
+            }
+            @media only screen and (max-width: 768px) {
                 .singleMovie{
                     width: calc((100% / 3) - 20px);
-                    height: 500px;
+                    height: 275px;
                 }
             }
-            @media only screen and (max-width: 1100px) {
+            @media only screen and (max-width: 576px) {
                 .singleMovie{
-                    width: calc((100% / 3) - 30px);
-                    height: 400px;
+                    width: calc((100% / 2) - 20px);
+                    height: 275px;
                 }
             }
-            @media only screen and (max-width: 1000px) {
-                .singleMovie{
-                    width: calc((100% / 2) - 30px);
-                    height: 500px;
-                }
-            }
-            @media only screen and (max-width: 700px) {
+            @media only screen and (max-width: 448px) {
                 .movies_container{
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 10px;
-                }
-                .singleMovie{
-                    width: 70%;
-                    height: 400px;
-                }
-            }
-            @media only screen and (max-width: 500px) {
-                .movies_container{
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 10px;
-                }
-                .singleMovie{
                     width: 80%;
-                    height: 400px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    // flex-wrap: wrap;
+                }
+                .singleMovie{
+                    width: 100%;
+                    height: 350px;
                 }
             }
         }

@@ -11,7 +11,7 @@ import BoolflixMain from './components/BoolflixMain.vue'
 export default {
   name: 'App',
   components: {
-    BoolflixMain
+    BoolflixMain,
   }
 }
 </script>
@@ -36,10 +36,15 @@ body{
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  // position: relative;
   #logo{
     padding-top: 20px;
     max-width: 20%;
-    max-height: 100px
+    max-height: 75px;
+    // position: absolute;
+    // top: 5%;
+    // left: 5%;
+    // display: block;
   };
 }
 </style>
